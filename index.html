@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster - Buat & Main Kuis Seru!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="particles" id="particles"></div>
+        <div class="gradient-orbs">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header with Animation -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🎯</span>
+                <h1 class="logo-text">QuizMaster</h1>
+            </div>
+            <p class="tagline">Buat kuis seru & ajak teman main!</p>
+        </header>
+
+        <!-- Home Screen -->
+        <div id="homeScreen" class="screen active">
+            <div class="hero">
+                <h2 class="hero-title">Siap Menguji Pengetahuanmu?</h2>
+                <p class="hero-subtitle">Buat kuis unikmu sendiri atau main kuis dari temanmu</p>
+                <div class="hero-decoration">
+                    <span class="decoration-item">✨</span>
+                    <span class="decoration-item">🎮</span>
+                    <span class="decoration-item">🏆</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary ripple" onclick="app.showCreateQuiz()">
+                    <span class="btn-icon">✨</span>
+                    <span>Buat Kuis Baru</span>
+                    <span class="btn-shine"></span>
+                </button>
+                <button class="btn btn-secondary ripple" onclick="app.showJoinQuiz()">
+                    <span class="btn-icon">🎮</span>
+                    <span>Main Kuis</span>
+                    <span class="btn-shine"></span>
+                </button>
+                <button class="btn btn-tertiary ripple" onclick="app.showMyQuizzes()">
+                    <span class="btn-icon">📚</span>
+                    <span>Kuis Saya</span>
+                    <span class="btn-shine"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Create Quiz Screen -->
+        <div id="createQuizScreen" class="screen">
+            <button class="back-btn" onclick="app.showHome()">
+                <span class="back-arrow">←</span>
+                <span>Kembali</span>
+            </button>
+            
+            <h2 class="screen-title">
+                <span class="title-icon">✨</span>
+                Buat Kuis Baru
+            </h2>
+            
+            <div class="form-card">
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">📝</span>
+                        Judul Kuis
+                    </label>
+                    <input type="text" id="quizTitle" placeholder="Contoh: Pengetahuan Umum Indonesia" class="input-animated">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">📋</span>
+                        Deskripsi
+                    </label>
+                    <textarea id="quizDescription" placeholder="Ceritakan tentang kuismu..." class="input-animated"></textarea>
+                </div>
+            </div>
+
+            <div class="questions-container" id="questionsContainer">
+                <div class="question-card" data-index="0">
+                    <div class="question-header">
+                        <h3>
+                            <span class="question-number">1</span>
+                            Pertanyaan 1
+                        </h3>
+                        <button class="delete-btn" onclick="app.deleteQuestion(0)" style="display: none;">
+                            <span>🗑️</span>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="question-input input-animated" placeholder="Tulis pertanyaan di sini...">
+                    </div>
+                    <div class="answers-container">
+                        <div class="answer-item">
+                            <input type="radio" name="correct0" value="0" id="ans0_0" checked>
+                            <label for="ans0_0" class="radio-label">A</label>
+                            <input type="text" class="answer-input input-animated" placeholder="Jawaban A">
+                            <span class="correct-badge">✓ Benar</span>
+                        </div>
+                        <div class="answer-item">
+                            <input type="radio" name="correct0" value="1" id="ans0_1">
+                            <label for="ans0_1" class="radio-label">B</label>
+                            <input type="text" class="answer-input input-animated" placeholder="Jawaban B">
+                            <span class="correct-badge">✓ Benar</span>
+                        </div>
+                        <div class="answer-item">
+                            <input type="radio" name="correct0" value="2" id="ans0_2">
+                            <label for="ans0_2" class="radio-label">C</label>
+                            <input type="text" class="answer-input input-animated" placeholder="Jawaban C">
+                            <span class="correct-badge">✓ Benar</span>
+                        </div>
+                        <div class="answer-item">
+                            <input type="radio" name="correct0" value="3" id="ans0_3">
+                            <label for="ans0_3" class="radio-label">D</label>
+                            <input type="text" class="answer-input input-animated" placeholder="Jawaban D">
+                            <span class="correct-badge">✓ Benar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-outline ripple" onclick="app.addQuestion()">
+                <span class="btn-icon">➕</span>
+                <span>Tambah Pertanyaan</span>
+            </button>
+
+            <button class="btn btn-primary ripple btn-save" onclick="app.saveQuiz()">
+                <span class="btn-icon">💾</span>
+                <span>Simpan Kuis</span>
+                <span class="btn-shine"></span>
+            </button>
+        </div>
+
+        <!-- Join Quiz Screen -->
+        <div id="joinQuizScreen" class="screen">
+            <button class="back-btn" onclick="app.showHome()">
+                <span class="back-arrow">←</span>
+                <span>Kembali</span>
+            </button>
+            
+            <h2 class="screen-title">
+                <span class="title-icon">🎮</span>
+                Masukkan Kode Kuis
+            </h2>
+            
+            <div class="code-input-wrapper">
+                <div class="code-input-container">
+                    <input type="text" id="quizCode" class="code-input" placeholder="ABC123" maxlength="6">
+                    <div class="code-input-underline"></div>
+                </div>
+
+                <button class="btn btn-primary ripple btn-start" onclick="app.loadQuizByCode()">
+                    <span class="btn-icon">🚀</span>
+                    <span>Mulai Main!</span>
+                    <span class="btn-shine"></span>
+                </button>
+            </div>
+
+            <div class="divider">
+                <span>atau pilih kuis di bawah</span>
+            </div>
+
+            <div id="publicQuizzesList" class="quizzes-list"></div>
+        </div>
+
+        <!-- My Quizzes Screen -->
+        <div id="myQuizzesScreen" class="screen">
+            <button class="back-btn" onclick="app.showHome()">
+                <span class="back-arrow">←</span>
+                <span>Kembali</span>
+            </button>
+            
+            <h2 class="screen-title">
+                <span class="title-icon">📚</span>
+                Kuis Saya
+            </h2>
+            
+            <div id="myQuizzesList" class="quizzes-list"></div>
+        </div>
+
+        <!-- Play Quiz Screen -->
+        <div id="playQuizScreen" class="screen">
+            <div class="quiz-header">
+                <button class="back-btn-small" onclick="app.showHome()">
+                    <span>← Keluar</span>
+                </button>
+                <div class="quiz-info">
+                    <div class="quiz-progress">
+                        <span class="progress-label">Pertanyaan</span>
+                        <span class="progress-numbers">
+                            <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span>
+                        </span>
+                    </div>
+                    <div class="quiz-score">
+                        <span class="score-label">Skor</span>
+                        <span id="currentScore" class="score-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-content">
+                <div class="question-wrapper">
+                    <h2 id="questionText" class="question-text"></h2>
+                </div>
+                
+                <div id="answersContainer" class="play-answers-container"></div>
+            </div>
+
+            <div class="quiz-timer-wrapper">
+                <div class="timer-label">
+                    <span>⏱️</span>
+                    <span id="timerText">15s</span>
+                </div>
+                <div class="quiz-timer">
+                    <div class="timer-bar" id="timerBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="results-container">
+                <div class="confetti" id="confetti"></div>
+                <div class="results-content">
+                    <div class="results-icon" id="resultsIcon">🏆</div>
+                    <h2 class="results-title">Kuis Selesai!</h2>
+                    <div class="results-score-wrapper">
+                        <div class="results-score">
+                            <span id="finalScore" class="final-score-number">0</span>
+                            <span class="score-separator">/</span>
+                            <span id="maxScore" class="max-score-number">10</span>
+                        </div>
+                        <div class="results-percentage" id="resultsPercentage">0%</div>
+                    </div>
+                    <p class="results-message" id="resultsMessage"></p>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary ripple" onclick="app.restartQuiz()">
+                            <span class="btn-icon">🔄</span>
+                            <span>Main Lagi</span>
+                            <span class="btn-shine"></span>
+                        </button>
+                        <button class="btn btn-secondary ripple" onclick="app.showHome()">
+                            <span class="btn-icon">🏠</span>
+                            <span>Ke Beranda</span>
+                            <span class="btn-shine"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Modal -->
+        <div id="shareModal" class="modal">
+            <div class="modal-backdrop" onclick="app.closeShareModal()"></div>
+            <div class="modal-content">
+                <button class="modal-close" onclick="app.closeShareModal()">
+                    <span>✕</span>
+                </button>
+                <div class="modal-icon">🎉</div>
+                <h3 class="modal-title">Kuis Berhasil Dibuat!</h3>
+                <p class="modal-text">Bagikan kode ini ke teman-temanmu:</p>
+                <div class="share-code-wrapper">
+                    <div class="share-code" id="shareCode"></div>
+                    <button class="btn btn-outline ripple" onclick="app.copyCode()">
+                        <span class="btn-icon">📋</span>
+                        <span>Salin Kode</span>
+                    </button>
+                </div>
+                <p class="share-tip">💡 Tip: Teman-temanmu bisa main dengan memasukkan kode ini!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
