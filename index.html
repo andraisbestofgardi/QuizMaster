@@ -31,8 +31,229 @@
             <p class="tagline">Buat kuis seru & ajak teman main!</p>
         </header>
 
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="auth-container">
+                <div class="auth-icon">👋</div>
+                <h2 class="auth-title">Selamat Datang!</h2>
+                <p class="auth-subtitle">Masuk untuk melanjutkan</p>
+                
+                <form class="auth-form" onsubmit="app.handleLogin(event)">
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">@</span>
+                            Username
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">@</span>
+                            <input 
+                                type="text" 
+                                id="loginUsername" 
+                                class="input-animated input-with-at" 
+                                placeholder="username"
+                                pattern="[a-zA-Z0-9_]+"
+                                title="Hanya huruf, angka, dan underscore"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">🔒</span>
+                            Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                class="input-animated" 
+                                placeholder="Masukkan password"
+                                required>
+                            <button type="button" class="toggle-password" onclick="app.togglePassword('loginPassword')">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary ripple btn-auth">
+                        <span class="btn-icon">🚀</span>
+                        <span>Masuk</span>
+                        <span class="btn-shine"></span>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>Belum punya akun?</span>
+                </div>
+
+                <button class="btn btn-outline ripple" onclick="app.showSignup()">
+                    <span class="btn-icon">✨</span>
+                    <span>Daftar Sekarang</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Signup Screen -->
+        <div id="signupScreen" class="screen">
+            <button class="back-btn" onclick="app.showLogin()">
+                <span class="back-arrow">←</span>
+                <span>Kembali</span>
+            </button>
+            
+            <div class="auth-container">
+                <div class="auth-icon">✨</div>
+                <h2 class="auth-title">Buat Akun Baru</h2>
+                <p class="auth-subtitle">Bergabunglah dengan QuizMaster!</p>
+                
+                <form class="auth-form" onsubmit="app.handleSignup(event)">
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">📸</span>
+                            Foto Profil
+                        </label>
+                        <div class="profile-photo-upload">
+                            <div class="profile-photo-preview" id="signupPhotoPreview">
+                                <span class="default-avatar">👤</span>
+                                <img id="signupPhotoImg" style="display: none;">
+                            </div>
+                            <div class="upload-actions">
+                                <label for="signupPhoto" class="upload-btn">
+                                    <span>📷</span>
+                                    <span>Pilih Foto</span>
+                                </label>
+                                <input 
+                                    type="file" 
+                                    id="signupPhoto" 
+                                    accept="image/*"
+                                    style="display: none;"
+                                    onchange="app.handlePhotoSelect(event, 'signup')">
+                                <button type="button" class="remove-photo-btn" id="signupRemovePhoto" onclick="app.removePhoto('signup')" style="display: none;">
+                                    <span>🗑️</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">👤</span>
+                            Nama Lengkap
+                        </label>
+                        <input 
+                            type="text" 
+                            id="signupName" 
+                            class="input-animated" 
+                            placeholder="Masukkan nama lengkap"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">@</span>
+                            Username
+                        </label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">@</span>
+                            <input 
+                                type="text" 
+                                id="signupUsername" 
+                                class="input-animated input-with-at" 
+                                placeholder="username"
+                                pattern="[a-zA-Z0-9_]+"
+                                title="Hanya huruf, angka, dan underscore"
+                                required>
+                        </div>
+                        <small class="input-hint">Username hanya boleh mengandung huruf, angka, dan underscore (_)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">📧</span>
+                            Email
+                        </label>
+                        <input 
+                            type="email" 
+                            id="signupEmail" 
+                            class="input-animated" 
+                            placeholder="email@example.com"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">🔒</span>
+                            Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="signupPassword" 
+                                class="input-animated" 
+                                placeholder="Minimal 6 karakter"
+                                minlength="6"
+                                required>
+                            <button type="button" class="toggle-password" onclick="app.togglePassword('signupPassword')">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">🔒</span>
+                            Konfirmasi Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="signupConfirmPassword" 
+                                class="input-animated" 
+                                placeholder="Ulangi password"
+                                minlength="6"
+                                required>
+                            <button type="button" class="toggle-password" onclick="app.togglePassword('signupConfirmPassword')">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary ripple btn-auth">
+                        <span class="btn-icon">🎉</span>
+                        <span>Daftar</span>
+                        <span class="btn-shine"></span>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>Sudah punya akun?</span>
+                </div>
+
+                <button class="btn btn-outline ripple" onclick="app.showLogin()">
+                    <span class="btn-icon">🚀</span>
+                    <span>Masuk</span>
+                </button>
+            </div>
+        </div>
+
         <!-- Home Screen -->
-        <div id="homeScreen" class="screen active">
+        <div id="homeScreen" class="screen">
+            <div class="user-info">
+                <div class="user-avatar-wrapper" onclick="app.showEditProfile()">
+                    <div class="user-avatar" id="userAvatar">
+                        <span id="userAvatarIcon">👤</span>
+                        <img id="userAvatarImg" style="display: none;">
+                    </div>
+                    <div class="edit-avatar-badge">✏️</div>
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">User</div>
+                    <div class="user-username" id="userUsername">@username</div>
+                </div>
+                <button class="logout-btn" onclick="app.logout()">
+                    <span>🚪</span>
+                </button>
+            </div>
+            
             <div class="hero">
                 <h2 class="hero-title">Siap Menguji Pengetahuanmu?</h2>
                 <p class="hero-subtitle">Buat kuis unikmu sendiri atau main kuis dari temanmu</p>
@@ -260,6 +481,67 @@
                             <span class="btn-icon">🏠</span>
                             <span>Ke Beranda</span>
                             <span class="btn-shine"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-backdrop" onclick="app.closeEditProfile()"></div>
+            <div class="modal-content">
+                <button class="modal-close" onclick="app.closeEditProfile()">
+                    <span>✕</span>
+                </button>
+                <div class="modal-icon">👤</div>
+                <h3 class="modal-title">Edit Profil</h3>
+                
+                <div class="edit-profile-form">
+                    <div class="profile-photo-upload">
+                        <div class="profile-photo-preview large" id="editPhotoPreview">
+                            <span class="default-avatar" id="editAvatarIcon">👤</span>
+                            <img id="editPhotoImg" style="display: none;">
+                        </div>
+                        <div class="upload-actions">
+                            <label for="editPhoto" class="upload-btn">
+                                <span>📷</span>
+                                <span>Ubah Foto</span>
+                            </label>
+                            <input 
+                                type="file" 
+                                id="editPhoto" 
+                                accept="image/*"
+                                style="display: none;"
+                                onchange="app.handlePhotoSelect(event, 'edit')">
+                            <button type="button" class="remove-photo-btn" id="editRemovePhoto" onclick="app.removePhoto('edit')" style="display: none;">
+                                <span>🗑️</span>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <span class="label-icon">👤</span>
+                            Nama Lengkap
+                        </label>
+                        <input 
+                            type="text" 
+                            id="editName" 
+                            class="input-animated" 
+                            placeholder="Nama lengkap">
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary ripple" onclick="app.saveProfile()">
+                            <span class="btn-icon">💾</span>
+                            <span>Simpan</span>
+                            <span class="btn-shine"></span>
+                        </button>
+                        <button class="btn btn-outline ripple" onclick="app.closeEditProfile()">
+                            <span class="btn-icon">✕</span>
+                            <span>Batal</span>
                         </button>
                     </div>
                 </div>

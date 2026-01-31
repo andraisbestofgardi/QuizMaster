@@ -147,23 +147,52 @@ body {
 }
 
 /* ============================================
-   CONTAINER & LAYOUT
+   CONTAINER & LAYOUT (Responsive untuk semua device)
    ============================================ */
 .container {
     position: relative;
     z-index: 1;
     max-width: 450px;
     width: 100%;
-    height: 800px;
+    height: 100vh;
     margin: 0 auto;
     padding: 20px;
     overflow-y: auto;
     overflow-x: hidden;
-    background: rgba(26, 26, 46, 0.3);
+    background: rgba(26, 26, 46, 0.5);
     backdrop-filter: blur(20px);
-    border-radius: 30px;
-    box-shadow: 0 0 60px rgba(255, 107, 157, 0.3);
-    border: 2px solid rgba(255, 107, 157, 0.2);
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        max-width: 600px;
+        padding: 30px;
+        border-radius: 30px;
+        box-shadow: 0 0 60px rgba(255, 107, 157, 0.3);
+        border: 2px solid rgba(255, 107, 157, 0.2);
+        height: 95vh;
+        margin: 2.5vh auto;
+    }
+}
+
+/* Desktop/Laptop (1025px+) */
+@media (min-width: 1025px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .container {
+        max-width: 500px;
+        height: 900px;
+        padding: 35px;
+        border-radius: 35px;
+        box-shadow: 0 0 80px rgba(255, 107, 157, 0.4);
+        border: 3px solid rgba(255, 107, 157, 0.3);
+        margin: 0;
+    }
 }
 
 /* Custom scrollbar */
@@ -193,6 +222,366 @@ body {
     padding: 20px 10px;
     animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* ============================================
+   AUTH SCREENS (Login & Signup)
+   ============================================ */
+.auth-container {
+    padding: 20px 0;
+    animation: fadeInUp 0.6s ease;
+}
+
+.auth-icon {
+    font-size: 5rem;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: bounce-rotate 2s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(255, 107, 157, 0.5));
+}
+
+.auth-title {
+    font-family: 'Righteous', cursive;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 30px;
+    font-size: 1rem;
+}
+
+.auth-form {
+    margin-bottom: 20px;
+}
+
+.input-with-prefix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-prefix {
+    position: absolute;
+    left: 16px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.input-with-at {
+    padding-left: 40px !important;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 5px;
+    transition: var(--transition);
+    filter: grayscale(100%);
+}
+
+.toggle-password:hover {
+    filter: grayscale(0%);
+    transform: scale(1.2);
+}
+
+.input-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+}
+
+.auth-divider {
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 35%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 107, 157, 0.3));
+}
+
+.auth-divider::before {
+    left: 0;
+}
+
+.auth-divider::after {
+    right: 0;
+    background: linear-gradient(to left, transparent, rgba(255, 107, 157, 0.3));
+}
+
+.auth-divider span {
+    background: transparent;
+    padding: 0 15px;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.btn-auth {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ============================================
+   PROFILE PHOTO UPLOAD
+   ============================================ */
+.profile-photo-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 2px dashed rgba(255, 107, 157, 0.3);
+}
+
+.profile-photo-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-md);
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    animation: pulse-avatar 2s ease-in-out infinite;
+}
+
+.profile-photo-preview.large {
+    width: 150px;
+    height: 150px;
+}
+
+.profile-photo-preview .default-avatar {
+    font-size: 4rem;
+}
+
+.profile-photo-preview.large .default-avatar {
+    font-size: 5rem;
+}
+
+.profile-photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--color-accent), #FFC371);
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 700;
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.remove-photo-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--color-danger), #c0392b);
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 700;
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.remove-photo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   USER INFO (Home Screen) - Updated
+   ============================================ */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255, 107, 157, 0.2);
+    backdrop-filter: blur(10px);
+    animation: slideDown 0.6s ease;
+}
+
+.user-avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.user-avatar-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.user-avatar-wrapper:hover .edit-avatar-badge {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: var(--shadow-md);
+    animation: pulse-avatar 2s ease-in-out infinite;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.edit-avatar-badge {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--color-accent), #FFC371);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--color-bg-medium);
+    opacity: 0;
+    transform: scale(0);
+    transition: var(--transition);
+}
+
+@keyframes pulse-avatar {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+    }
+}
+
+.user-details {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: white;
+    margin-bottom: 2px;
+}
+
+.user-username {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.logout-btn {
+    background: rgba(255, 107, 107, 0.2);
+    border: 2px solid var(--color-danger);
+    color: var(--color-danger);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+}
+
+.logout-btn:hover {
+    background: var(--color-danger);
+    color: white;
+    transform: rotate(20deg) scale(1.1);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   EDIT PROFILE MODAL
+   ============================================ */
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edit-profile-form .button-group {
+    gap: 10px;
+}
+
+/* ============================================
+   HEADER ANIMATIONS (Updated)
+   ============================================ */
 
 @keyframes slideDown {
     from {
@@ -1671,38 +2060,206 @@ textarea.input-animated {
 }
 
 /* ============================================
-   MOBILE OPTIMIZED (9:16 format)
+   RESPONSIVE DESIGN FOR ALL DEVICES
    ============================================ */
-@media (max-width: 480px) {
+
+/* Mobile Small (max 375px) */
+@media (max-width: 375px) {
     .container {
-        max-width: 100%;
-        height: 100vh;
-        border-radius: 0;
+        padding: 15px;
+    }
+    
+    .logo-text {
+        font-size: 2rem;
+    }
+    
+    .logo-icon {
+        font-size: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 1.6rem;
     }
     
     .btn {
-        font-size: 1rem;
-        padding: 15px 25px;
+        font-size: 0.95rem;
+        padding: 14px 24px;
     }
     
-    .hero {
-        padding: 25px 15px;
-    }
-    
-    .quiz-content {
-        padding: 20px;
-    }
-    
-    .form-card {
-        padding: 20px;
-    }
-    
-    .question-card {
-        padding: 20px;
+    .otp-input {
+        width: 45px;
+        height: 55px;
+        font-size: 1.6rem;
     }
 }
 
-/* Landscape mode warning */
+/* Mobile Large (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+    .container {
+        padding: 18px;
+    }
+}
+
+/* Tablet Portrait (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    .container {
+        max-width: 500px;
+        padding: 25px;
+        border-radius: 25px;
+        box-shadow: 0 0 60px rgba(255, 107, 157, 0.3);
+        border: 2px solid rgba(255, 107, 157, 0.2);
+    }
+    
+    .logo-text {
+        font-size: 3rem;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .btn {
+        font-size: 1.15rem;
+        padding: 18px 32px;
+    }
+    
+    .otp-input {
+        width: 55px;
+        height: 65px;
+        font-size: 2.2rem;
+    }
+}
+
+/* Tablet Landscape (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .logo-text {
+        font-size: 3.2rem;
+    }
+    
+    .logo-icon {
+        font-size: 3rem;
+    }
+    
+    .hero-title {
+        font-size: 2.4rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .screen-title {
+        font-size: 2rem;
+    }
+    
+    .btn {
+        font-size: 1.2rem;
+        padding: 18px 34px;
+    }
+    
+    .question-text {
+        font-size: 1.7rem;
+    }
+    
+    .otp-input {
+        width: 60px;
+        height: 70px;
+        font-size: 2.4rem;
+    }
+    
+    .play-answers-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+    
+    .quiz-header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+/* Desktop/Laptop (1025px+) */
+@media (min-width: 1025px) {
+    .logo-text {
+        font-size: 3.5rem;
+    }
+    
+    .logo-icon {
+        font-size: 3.5rem;
+    }
+    
+    .hero {
+        padding: 40px 30px;
+    }
+    
+    .hero-title {
+        font-size: 2.6rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .screen-title {
+        font-size: 2.3rem;
+    }
+    
+    .btn {
+        font-size: 1.25rem;
+        padding: 20px 36px;
+    }
+    
+    .question-text {
+        font-size: 1.8rem;
+    }
+    
+    .otp-input {
+        width: 65px;
+        height: 75px;
+        font-size: 2.5rem;
+    }
+    
+    .play-answers-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .quiz-header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 25px;
+    }
+    
+    .results-icon {
+        font-size: 7rem;
+    }
+    
+    .results-title {
+        font-size: 2.8rem;
+    }
+    
+    .results-score {
+        font-size: 4.5rem;
+    }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 550px;
+        height: 950px;
+    }
+}
+
+/* Ultra Wide (1920px+) */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 600px;
+        height: 1000px;
+    }
+}
+
+/* Landscape mode warning for mobile */
 @media (orientation: landscape) and (max-height: 500px) {
     .container::before {
         content: '📱 Untuk pengalaman terbaik, gunakan mode portrait (vertikal)';
@@ -1710,12 +2267,13 @@ textarea.input-animated {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.95);
         color: white;
         padding: 20px;
         border-radius: 15px;
         z-index: 10000;
         text-align: center;
         font-weight: 700;
+        max-width: 80%;
     }
 }

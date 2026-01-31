@@ -8,11 +8,298 @@ const app = {
     questionCount: 1,
     timer: null,
     timeLeft: 15,
+    currentUser: null,
 
     init() {
+        this.checkAuth();
         this.loadQuizzes();
         this.createParticles();
-        this.showHome();
+    },
+
+    // ============================================
+    // AUTHENTICATION
+    // ============================================
+    checkAuth() {
+        const user = localStorage.getItem('currentUser');
+        if (user) {
+            this.currentUser = JSON.parse(user);
+            this.updateUserInfo();
+            this.showHome();
+        } else {
+            this.showLogin();
+        }
+    },
+
+    updateUserInfo() {
+        if (this.currentUser) {
+            document.getElementById('userName').textContent = this.currentUser.name;
+            document.getElementById('userUsername').textContent = '@' + this.currentUser.username;
+            
+            // Update avatar
+            const avatarIcon = document.getElementById('userAvatarIcon');
+            const avatarImg = document.getElementById('userAvatarImg');
+            
+            if (this.currentUser.photo) {
+                avatarImg.src = this.currentUser.photo;
+                avatarImg.style.display = 'block';
+                avatarIcon.style.display = 'none';
+            } else {
+                avatarImg.style.display = 'none';
+                avatarIcon.style.display = 'block';
+            }
+        }
+    },
+
+    showLogin() {
+        this.showScreen('loginScreen');
+    },
+
+    showSignup() {
+        this.showScreen('signupScreen');
+    },
+
+    handleLogin(event) {
+        event.preventDefault();
+        
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        
+        // Find user
+        const user = users.find(u => u.username === username && u.password === password);
+
+        if (user) {
+            this.currentUser = {
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                photo: user.photo || null
+            };
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            this.updateUserInfo();
+            this.showNotification('✅ Login berhasil! Selamat datang ' + user.name, 'success');
+            this.showHome();
+            
+            // Reset form
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        } else {
+            this.showNotification('❌ Username atau password salah!', 'error');
+        }
+    },
+
+    handleSignup(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('signupName').value.trim();
+        const username = document.getElementById('signupUsername').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        
+        // Get photo
+        const photoImg = document.getElementById('signupPhotoImg');
+        const photo = photoImg.style.display === 'block' ? photoImg.src : null;
+
+        // Validation
+        if (password !== confirmPassword) {
+            this.showNotification('❌ Password tidak cocok!', 'error');
+            return;
+        }
+
+        if (password.length < 6) {
+            this.showNotification('❌ Password minimal 6 karakter!', 'error');
+            return;
+        }
+
+        // Check username format (only alphanumeric and underscore)
+        const usernameRegex = /^[a-zA-Z0-9_]+$/;
+        if (!usernameRegex.test(username)) {
+            this.showNotification('❌ Username hanya boleh huruf, angka, dan underscore!', 'error');
+            return;
+        }
+
+        // Get existing users
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+        // Check if username already exists
+        if (users.some(u => u.username === username)) {
+            this.showNotification('❌ Username @' + username + ' sudah digunakan!', 'error');
+            return;
+        }
+
+        // Check if email already exists
+        if (users.some(u => u.email === email)) {
+            this.showNotification('❌ Email sudah terdaftar!', 'error');
+            return;
+        }
+
+        // Create new user
+        const newUser = {
+            id: Date.now().toString(),
+            name: name,
+            username: username,
+            email: email,
+            password: password,
+            photo: photo,
+            createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        this.showNotification('✅ Akun berhasil dibuat! Silakan login.', 'success');
+        
+        // Reset form
+        document.getElementById('signupName').value = '';
+        document.getElementById('signupUsername').value = '';
+        document.getElementById('signupEmail').value = '';
+        document.getElementById('signupPassword').value = '';
+        document.getElementById('signupConfirmPassword').value = '';
+        this.removePhoto('signup');
+        
+        // Go to login
+        setTimeout(() => {
+            this.showLogin();
+        }, 1500);
+    },
+
+    logout() {
+        if (confirm('Apakah kamu yakin ingin keluar?')) {
+            localStorage.removeItem('currentUser');
+            this.currentUser = null;
+            this.showNotification('👋 Berhasil logout!', 'success');
+            setTimeout(() => {
+                this.showLogin();
+            }, 1000);
+        }
+    },
+
+    togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const button = input.nextElementSibling;
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            button.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            button.textContent = '👁️';
+        }
+    },
+
+    // ============================================
+    // PROFILE PHOTO MANAGEMENT
+    // ============================================
+    handlePhotoSelect(event, context) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            this.showNotification('❌ File harus berupa gambar!', 'error');
+            return;
+        }
+
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            this.showNotification('❌ Ukuran file maksimal 2MB!', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const imageData = e.target.result;
+            
+            if (context === 'signup') {
+                document.getElementById('signupPhotoImg').src = imageData;
+                document.getElementById('signupPhotoImg').style.display = 'block';
+                document.getElementById('signupPhotoPreview').querySelector('.default-avatar').style.display = 'none';
+                document.getElementById('signupRemovePhoto').style.display = 'flex';
+            } else if (context === 'edit') {
+                document.getElementById('editPhotoImg').src = imageData;
+                document.getElementById('editPhotoImg').style.display = 'block';
+                document.getElementById('editAvatarIcon').style.display = 'none';
+                document.getElementById('editRemovePhoto').style.display = 'flex';
+            }
+        };
+        reader.readAsDataURL(file);
+    },
+
+    removePhoto(context) {
+        if (context === 'signup') {
+            document.getElementById('signupPhoto').value = '';
+            document.getElementById('signupPhotoImg').style.display = 'none';
+            document.getElementById('signupPhotoPreview').querySelector('.default-avatar').style.display = 'block';
+            document.getElementById('signupRemovePhoto').style.display = 'none';
+        } else if (context === 'edit') {
+            document.getElementById('editPhoto').value = '';
+            document.getElementById('editPhotoImg').style.display = 'none';
+            document.getElementById('editAvatarIcon').style.display = 'block';
+            document.getElementById('editRemovePhoto').style.display = 'none';
+        }
+    },
+
+    showEditProfile() {
+        // Load current user data
+        if (!this.currentUser) return;
+
+        document.getElementById('editName').value = this.currentUser.name;
+        
+        // Load profile photo
+        if (this.currentUser.photo) {
+            document.getElementById('editPhotoImg').src = this.currentUser.photo;
+            document.getElementById('editPhotoImg').style.display = 'block';
+            document.getElementById('editAvatarIcon').style.display = 'none';
+            document.getElementById('editRemovePhoto').style.display = 'flex';
+        } else {
+            document.getElementById('editPhotoImg').style.display = 'none';
+            document.getElementById('editAvatarIcon').style.display = 'block';
+            document.getElementById('editRemovePhoto').style.display = 'none';
+        }
+
+        document.getElementById('editProfileModal').classList.add('active');
+    },
+
+    closeEditProfile() {
+        document.getElementById('editProfileModal').classList.remove('active');
+        document.getElementById('editPhoto').value = '';
+    },
+
+    saveProfile() {
+        const newName = document.getElementById('editName').value.trim();
+        
+        if (!newName) {
+            this.showNotification('❌ Nama tidak boleh kosong!', 'error');
+            return;
+        }
+
+        // Get photo
+        const photoImg = document.getElementById('editPhotoImg');
+        const photo = photoImg.style.display === 'block' ? photoImg.src : null;
+
+        // Update current user
+        this.currentUser.name = newName;
+        this.currentUser.photo = photo;
+
+        // Update in users array
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const userIndex = users.findIndex(u => u.username === this.currentUser.username);
+        if (userIndex !== -1) {
+            users[userIndex].name = newName;
+            users[userIndex].photo = photo;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Update current user in localStorage
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
+        // Update UI
+        this.updateUserInfo();
+        this.closeEditProfile();
+        this.showNotification('✅ Profil berhasil diperbarui!', 'success');
     },
 
     // Create animated particles background
@@ -56,21 +343,37 @@ const app = {
     },
 
     showHome() {
+        if (!this.currentUser) {
+            this.showLogin();
+            return;
+        }
         this.showScreen('homeScreen');
     },
 
     showCreateQuiz() {
+        if (!this.currentUser) {
+            this.showLogin();
+            return;
+        }
         this.questionCount = 1;
         this.resetCreateQuizForm();
         this.showScreen('createQuizScreen');
     },
 
     showJoinQuiz() {
+        if (!this.currentUser) {
+            this.showLogin();
+            return;
+        }
         this.loadPublicQuizzes();
         this.showScreen('joinQuizScreen');
     },
 
     showMyQuizzes() {
+        if (!this.currentUser) {
+            this.showLogin();
+            return;
+        }
         this.loadMyQuizzes();
         this.showScreen('myQuizzesScreen');
     },
@@ -248,7 +551,9 @@ const app = {
             title: title,
             description: description,
             questions: questions,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            createdBy: this.currentUser.username,
+            createdByName: this.currentUser.name
         };
 
         this.quizzes.push(quiz);
@@ -336,6 +641,8 @@ const app = {
                     code: 'DEMO01',
                     title: 'Pengetahuan Umum Indonesia',
                     description: 'Tes pengetahuanmu tentang Indonesia!',
+                    createdBy: 'quizmaster',
+                    createdByName: 'Quiz Master',
                     questions: [
                         {
                             question: 'Siapa proklamator kemerdekaan Indonesia?',
@@ -402,6 +709,7 @@ const app = {
                 </div>
                 <div class="quiz-item-info">
                     <span>📝 ${quiz.questions.length} pertanyaan</span>
+                    ${quiz.createdBy ? `<span>👤 @${quiz.createdBy}</span>` : ''}
                 </div>
             `;
             item.onclick = () => this.startQuiz(quiz);
